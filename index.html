@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="𝗗𝗢𝗖𝗧𝗢𝗥 𝗖𝗢𝗗𝗘 𝗘𝗟 𝗬𝗢𝗨𝗧𝗨𝗕𝗘𝗥 – منصة استضافة البوتات المتطورة مع نظام أدمن كامل">
+  <title>𝗗𝗢𝗖𝗧𝗢𝗥 𝗖𝗢𝗗𝗘 𝗘𝗟 𝗬𝗢𝗨𝗧𝗨𝗕𝗘𝗥 | الصفحة الرئيسية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ---------------------------------------------------------------
+       RESET & GLOBAL - دكتور كود - تصميم نيون متجاوب بالكامل
+    --------------------------------------------------------------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(ellipse at 20% 30%, #0a0a1a, #010005);
+      color: #ffffff;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* حاوية رئيسية */
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ========== شعار متحرك مع الصورة ========== */
+    .logo-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .logo-glow {
+      width: 180px;
+      height: 180px;
+      background: linear-gradient(135deg, #00f3ff, #ff00cc, #b100ff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: levitate 3s ease-in-out infinite, borderPulse 2s infinite;
+      box-shadow: 0 0 30px rgba(0, 243, 255, 0.6);
+      transition: 0.3s;
+    }
+    .logo-glow img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255,255,255,0.3);
+      transition: transform 0.3s;
+    }
+    .logo-glow img:hover {
+      transform: scale(1.05);
+    }
+    @keyframes levitate {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+      100% { transform: translateY(0px); }
+    }
+    @keyframes borderPulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.7); }
+      70% { box-shadow: 0 0 0 20px rgba(0, 243, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
+    }
+
+    /* ========== العنوان الرئيسي ========== */
+    .hero-title {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .hero-title h1 {
+      font-size: clamp(1.8rem, 8vw, 3.8rem);
+      font-weight: 900;
+      background: linear-gradient(45deg, #ffffff, #00f3ff, #ff00cc, #ffcc00);
+      background-size: 300% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shine 5s linear infinite;
+      letter-spacing: -0.02em;
+    }
+    @keyframes shine {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .hero-sub {
+      text-align: center;
+      font-size: clamp(1rem, 4vw, 1.3rem);
+      color: #ccc;
+      margin-top: 0.5rem;
+    }
+
+    /* ========== مجموعة الأزرار ========== */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2rem;
+      margin: 2.5rem 0;
+    }
+    .neon-link {
+      display: inline-block;
+      padding: 0.9rem 2.2rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 60px;
+      border: 2px solid;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    .neon-link.login {
+      border-color: #00f3ff;
+      color: #00f3ff;
+      box-shadow: 0 0 8px rgba(0,243,255,0.3);
+    }
+    .neon-link.login:hover {
+      background: #00f3ff;
+      color: #000;
+      box-shadow: 0 0 25px #00f3ff;
+      transform: translateY(-3px);
+    }
+    .neon-link.register {
+      border-color: #ff00cc;
+      color: #ff00cc;
+    }
+    .neon-link.register:hover {
+      background: #ff00cc;
+      color: #000;
+      box-shadow: 0 0 25px #ff00cc;
+      transform: translateY(-3px);
+    }
+    .neon-link.admin {
+      border-color: #ffcc00;
+      color: #ffcc00;
+    }
+    .neon-link.admin:hover {
+      background: #ffcc00;
+      color: #000;
+      box-shadow: 0 0 25px #ffcc00;
+    }
+
+    /* ========== بطاقات المميزات - شبكة متجاوبة ========== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+    .feature-card {
+      background: rgba(15, 15, 25, 0.6);
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      padding: 2rem 1.5rem;
+      border: 1px solid rgba(0, 243, 255, 0.2);
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      text-align: center;
+    }
+    .feature-card:hover {
+      transform: translateY(-8px);
+      border-color: #ff00cc;
+      box-shadow: 0 20px 35px -12px rgba(0,243,255,0.4);
+    }
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      filter: drop-shadow(0 0 6px cyan);
+    }
+    .feature-card h3 {
+      font-size: 1.6rem;
+      margin-bottom: 0.8rem;
+      background: linear-gradient(135deg, #fff, #00f3ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .feature-card p {
+      color: #b0b0c0;
+      line-height: 1.5;
+    }
+
+    /* ========== قسم الإحصائيات ========== */
+    .stats-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+    .stat-box {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
+      padding: 1.2rem 2rem;
+      border-radius: 60px;
+      border: 1px solid rgba(0,243,255,0.4);
+      text-align: center;
+      min-width: 150px;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #00f3ff;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    /* ========== فوتر ========== */
+    .footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    /* ========== MEDIA QUERIES - RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 1rem;
+      }
+      .logo-glow {
+        width: 130px;
+        height: 130px;
+      }
+      .logo-glow img {
+        width: 105px;
+        height: 105px;
+      }
+      .feature-card {
+        padding: 1.2rem;
+      }
+      .feature-card h3 {
+        font-size: 1.3rem;
+      }
+      .button-group {
+        gap: 0.8rem;
+      }
+      .neon-link {
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+      }
+      .stat-box {
+        padding: 0.8rem 1.2rem;
+        min-width: 120px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title h1 {
+        font-size: 1.8rem;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .stat-number {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* تحسين للشاشات الكبيرة جداً */
+    @media (min-width: 1600px) {
+      .main-container {
+        max-width: 1600px;
+      }
+      .feature-card {
+        padding: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="main-container">
+  <!-- الشعار -->
+  <div class="logo-wrapper">
+    <div class="logo-glow">
+      <img src="https://i.ibb.co/4ZCcTzcX/file-000000008c3871f5a8d2a2aaebdc2064.png" alt="Doctor Code Logo">
+    </div>
+  </div>
+
+  <!-- العنوان -->
+  <div class="hero-title">
+    <h1>𝗗𝗢𝗖𝗧𝗢𝗥 𝗖𝗢𝗗𝗘 𝗘𝗟 𝗬𝗢𝗨𝗧𝗨𝗕𝗘𝗥</h1>
+  </div>
+  <div class="hero-sub">
+    ⚡ منصة استضافة البوتات المتقدمة | تشغيل فوري | نظام أدمن كامل ⚡
+  </div>
+
+  <!-- الأزرار -->
+  <div class="button-group">
+    <a href="/login" class="neon-link login">🔐 دخول إلى لوحة التحكم</a>
+    <a href="/register" class="neon-link register">✨ إنشاء حساب جديد</a>
+    <a href="/admin" class="neon-link admin">👑 بوابة الأدمن</a>
+  </div>
+
+  <!-- بطاقات المميزات -->
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚙️</div>
+      <h3>بوتات Node.js</h3>
+      <p>أي هيكل ملفات، اكتشاف تلقائي لملف الدخول، تشغيل npm install تلقائياً.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🐍</div>
+      <h3>بوتات Python</h3>
+      <p>يجب احتواؤه على ahmed.py إجبارياً، مع دعم requirements.txt وتثبيت تلقائي.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📡</div>
+      <h3>كونسول حي</h3>
+      <p>مخرجات stdout/stderr فورية عبر Socket.io، دعم كامل للغة العربية والرموز.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👑</div>
+      <h3>نظام أدمن متكامل</h3>
+      <p>حظر مستخدمين، رفع صلاحية لأدمن، مراقبة الملفات، إنشاء حسابات، سجل كامل.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>جلسات متعددة</h3>
+      <p>تسجيل دخول من عدة أجهزة في نفس الوقت مع إدارة الجلسات.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <h3>واجهة نيون</h3>
+      <p>تصميم Glassmorphism، أزرار متحركة، تأثيرات ضوئية، متجاوب مع كل الشاشات.</p>
+    </div>
+  </div>
+
+  <!-- إحصائيات سريعة -->
+  <div class="stats-wrapper">
+    <div class="stat-box"><div class="stat-number">∞</div><div class="stat-label">بوتات غير محدودة (بريميوم)</div></div>
+    <div class="stat-box"><div class="stat-number">3</div><div class="stat-label">بوتات مجانية</div></div>
+    <div class="stat-box"><div class="stat-number">24/7</div><div class="stat-label">تشغيل مستقر</div></div>
+    <div class="stat-box"><div class="stat-number">Socket.io</div><div class="stat-label">كونسول لحظي</div></div>
+  </div>
+
+  <div class="footer">
+    <p>© 2025 𝗗𝗢𝗖𝗧𝗢𝗥 𝗖𝗢𝗗𝗘 𝗘𝗟 𝗬𝗢𝗨𝗧𝗨𝗕𝗘𝗥 – نظام استضافة البوتات الجيل الجديد</p>
+    <p style="margin-top: 8px;">جميع الحقوق محفوظة | تشغيل آمن مع عزل العمليات</p>
+  </div>
+</div>
+
+<!-- سكريبت بسيط للكشف عن الجهاز (اختياري) -->
+<script>
+  (function() {
+    const userAgent = navigator.userAgent;
+    let device = '';
+    if (/Mobi|Android|iPhone|iPad|iPod/i.test(userAgent)) {
+      device = 'mobile';
+    } else if (/Tablet|iPad/i.test(userAgent)) {
+      device = 'tablet';
+    } else {
+      device = 'desktop';
+    }
+    console.log(`[Doctor Code] الجهاز الحالي: ${device}`);
+    // يمكن إضافة أي منطق إضافي هنا إذا أردت تغيير أي شيء حسب الجهاز
+  })();
+</script>
+</body>
+</html>

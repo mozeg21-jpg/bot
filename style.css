@@ -1,0 +1,403 @@
+/* ============================================================
+   𝗗𝗢𝗖𝗧𝗢𝗥 𝗖𝗢𝗗𝗘 𝗘𝗟 𝗬𝗢𝗨𝗧𝗨𝗕𝗘𝗥
+   التنسيقات الأساسية لجميع صفحات النظام
+   تصميم نيون، زجاجي، متجاوب، حواف متحركة
+   ============================================================ */
+
+/* ------------------- RESET GLOBAL ------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ------------------- المتغيرات ------------------- */
+:root {
+  --bg-dark: #0a0a0f;
+  --bg-card: rgba(15, 15, 25, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --neon-cyan: #00f3ff;
+  --neon-pink: #ff00cc;
+  --neon-green: #00ff88;
+  --neon-purple: #b100ff;
+  --neon-yellow: #ffcc00;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0c0;
+  --danger: #ff3366;
+  --success: #00cc66;
+  --warning: #ffaa00;
+  --info: #3399ff;
+}
+
+/* ------------------- BASE BODY ------------------- */
+body {
+  font-family: 'Cairo', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: radial-gradient(ellipse at 20% 30%, #0a0a1a, #010005);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ------------------- الحواف الخارجية المتحركة (تأثير شاشة الكل) ------------------- */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 3px;
+  background: conic-gradient(from 0deg, 
+    var(--neon-cyan), 
+    var(--neon-pink), 
+    var(--neon-yellow), 
+    var(--neon-green), 
+    var(--neon-purple), 
+    var(--neon-cyan));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 9999;
+  animation: rotateBorder 10s linear infinite;
+}
+
+@keyframes rotateBorder {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* طبقة داخلية لتغميق الحواف */
+body::after {
+  content: '';
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  border-radius: 28px;
+  pointer-events: none;
+  z-index: 9998;
+  background: radial-gradient(circle at 50% 50%, transparent, rgba(0,0,0,0.3));
+}
+
+/* ------------------- GLASS CARDS (العناصر الزجاجية) ------------------- */
+.glass-card, 
+.dashboard-card, 
+.bot-card, 
+.admin-card,
+.login-card,
+.register-card,
+.upload-card,
+.device-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border-radius: 48px;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+.glass-card:hover, 
+.bot-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 243, 255, 0.6);
+  box-shadow: 0 15px 45px rgba(0, 243, 255, 0.2);
+}
+
+/* ------------------- أزرار النيون ------------------- */
+.neon-btn {
+  position: relative;
+  background: transparent;
+  border: 2px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 60px;
+  cursor: pointer;
+  transition: 0.3s;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.neon-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  transition: 0.5s;
+  z-index: -1;
+}
+
+.neon-btn:hover::before {
+  left: 100%;
+}
+
+.neon-btn:hover {
+  background: var(--neon-cyan);
+  color: #000;
+  box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan);
+}
+
+/* متغيرات الألوان للأزرار */
+.neon-btn.pink { border-color: var(--neon-pink); color: var(--neon-pink); }
+.neon-btn.pink:hover { background: var(--neon-pink); box-shadow: 0 0 20px var(--neon-pink); }
+
+.neon-btn.green { border-color: var(--neon-green); color: var(--neon-green); }
+.neon-btn.green:hover { background: var(--neon-green); }
+
+.neon-btn.purple { border-color: var(--neon-purple); color: var(--neon-purple); }
+.neon-btn.purple:hover { background: var(--neon-purple); }
+
+.neon-btn.danger { border-color: var(--danger); color: var(--danger); }
+.neon-btn.danger:hover { background: var(--danger); color: white; box-shadow: 0 0 20px var(--danger); }
+
+/* زر الحواف المتحركة (خاص) */
+.animated-border-btn {
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 12px 30px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1;
+  border-radius: 60px;
+}
+
+.animated-border-btn::before,
+.animated-border-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 60px;
+  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink), var(--neon-green), var(--neon-purple));
+  background-size: 300%;
+  z-index: -2;
+  transition: 0.5s;
+}
+
+.animated-border-btn::before {
+  filter: blur(8px);
+  opacity: 0.7;
+}
+
+.animated-border-btn:hover::before {
+  opacity: 1;
+  animation: borderRotate 3s linear infinite;
+}
+
+.animated-border-btn:hover::after {
+  animation: borderRotate 3s linear infinite;
+}
+
+@keyframes borderRotate {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ------------------- النصوص والتدرجات ------------------- */
+h1, h2, h3, .gradient-text {
+  background: linear-gradient(135deg, #fff, var(--neon-cyan), var(--neon-pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+
+.logo-text {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(45deg, #00f3ff, #ff00cc, #ffcc00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: logoPulse 3s infinite;
+}
+
+@keyframes logoPulse {
+  0% { filter: drop-shadow(0 0 2px cyan); }
+  50% { filter: drop-shadow(0 0 15px magenta); }
+  100% { filter: drop-shadow(0 0 2px cyan); }
+}
+
+/* ------------------- الكونسول ------------------- */
+.console-terminal {
+  background: #0c0c12;
+  border-radius: 24px;
+  border: 1px solid #2a2a3a;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 14px;
+  overflow-y: auto;
+  height: 400px;
+  padding: 1rem;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.console-line {
+  padding: 0.2rem 0.5rem;
+  border-bottom: 1px solid #1a1a2a;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-family: monospace;
+  direction: ltr;
+  text-align: left;
+}
+
+.console-line.stdout { color: #00ffaa; }
+.console-line.stderr { color: #ff5566; }
+.console-line.system { color: #ffaa44; }
+
+/* ------------------- حقول الإدخال ------------------- */
+.neon-input, 
+input:not([type=submit]), 
+select, 
+textarea {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--neon-cyan);
+  border-radius: 28px;
+  padding: 12px 18px;
+  color: white;
+  font-size: 1rem;
+  transition: 0.3s;
+  width: 100%;
+  outline: none;
+}
+
+.neon-input:focus, 
+input:focus, 
+select:focus, 
+textarea:focus {
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 12px var(--neon-pink);
+}
+
+/* ------------------- الجداول (للأدمن) ------------------- */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(0,0,0,0.4);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.admin-table th, 
+.admin-table td {
+  padding: 12px 16px;
+  text-align: right;
+  border-bottom: 1px solid #2a2a3a;
+}
+
+.admin-table th {
+  background: rgba(0, 243, 255, 0.2);
+  color: var(--neon-cyan);
+}
+
+/* ------------------- الشارات ------------------- */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 40px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.badge-running { background: var(--success); color: #000; }
+.badge-stopped { background: #555; color: white; }
+.badge-admin { background: var(--neon-purple); }
+.badge-user { background: var(--neon-cyan); }
+
+/* ------------------- الأدوات المساعدة ------------------- */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ------------------- إشعارات التوست ------------------- */
+.toast-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  border-radius: 40px;
+  background: #222;
+  color: white;
+  z-index: 10000;
+  font-weight: bold;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ------------------- التجاوب (Responsive) ------------------- */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+  .glass-card, .login-card, .register-card {
+    padding: 1.5rem;
+  }
+  h1 {
+    font-size: 1.8rem;
+  }
+  .admin-table th, .admin-table td {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+  .neon-btn {
+    padding: 8px 20px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+  .container {
+    padding: 10px;
+  }
+}
+
+/* ------------------- شريط التمرير المخصص ------------------- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #111;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--neon-cyan);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-pink);
+}

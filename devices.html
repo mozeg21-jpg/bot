@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>الأجهزة المتصلة | 𝗗𝗢𝗖𝗧𝗢𝗥 𝗖𝗢𝗗𝗘 𝗘𝗟 𝗬𝗢𝗨𝗧𝗨𝗕𝗘𝗥</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at 20% 30%, #0a0a1a, #010005);
+      color: #fff;
+      min-height: 100vh;
+      padding: 2rem;
+      position: relative;
+    }
+    /* الحواف الخارجية المتحركة */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 3px;
+      background: conic-gradient(from 0deg, #00f3ff, #ff00cc, #ffcc00, #00ff88, #b100ff, #00f3ff);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 999;
+      animation: rotateBorder 8s linear infinite;
+    }
+    @keyframes rotateBorder {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border-radius: 28px;
+      pointer-events: none;
+      z-index: 998;
+      background: radial-gradient(circle at 50% 50%, transparent, rgba(0,0,0,0.2));
+    }
+    .devices-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .glass-header {
+      background: rgba(15, 15, 25, 0.75);
+      backdrop-filter: blur(16px);
+      border-radius: 48px;
+      padding: 1rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border: 1px solid rgba(0, 243, 255, 0.3);
+    }
+    .header-title {
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, #fff, #ffcc00);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .back-btn {
+      background: transparent;
+      border: 2px solid #ffcc00;
+      color: #ffcc00;
+      padding: 0.5rem 1.5rem;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .back-btn:hover {
+      background: #ffcc00;
+      color: #000;
+      box-shadow: 0 0 20px #ffcc00;
+    }
+    .devices-list {
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(8px);
+      border-radius: 32px;
+      padding: 1.5rem;
+    }
+    .device-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid #2a2a3a;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .device-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .device-name {
+      font-weight: bold;
+      color: #00f3ff;
+    }
+    .device-detail {
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+    .revoke-btn {
+      background: transparent;
+      border: 2px solid #ff3366;
+      color: #ff3366;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .revoke-btn:hover {
+      background: #ff3366;
+      color: #fff;
+      box-shadow: 0 0 15px #ff3366;
+    }
+    .current-device {
+      background: rgba(0, 255, 136, 0.15);
+      border: 1px solid #00ff88;
+    }
+    .empty-message {
+      text-align: center;
+      padding: 2rem;
+      color: #aaa;
+    }
+    @media (max-width: 700px) {
+      body { padding: 1rem; }
+      .glass-header { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="devices-container">
+  <div class="glass-header">
+    <div class="header-title">📱 الأجهزة المتصلة بحسابك</div>
+    <a href="/dashboard" class="back-btn">← العودة للوحة</a>
+  </div>
+  <div class="devices-list" id="devicesList">
+    <div class="empty-message">جاري تحميل الأجهزة...</div>
+  </div>
+</div>
+
+<script>
+  // الحصول على معرف الجهاز الحالي من الـ refresh token (في الكوكيز)
+  function getCurrentDeviceId() {
+    // محاولة فك تشفير الـ refresh token من الكوكيز
+    const refreshToken = document.cookie.split('; ').find(row => row.startsWith('refreshToken='));
+    if (!refreshToken) return null;
+    const token = refreshToken.split('=')[1];
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.deviceId;
+    } catch(e) { return null; }
+  }
+
+  async function loadDevices() {
+    try {
+      const res = await fetch('/api/devices');
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      const container = document.getElementById('devicesList');
+      if (!data.devices || data.devices.length === 0) {
+        container.innerHTML = '<div class="empty-message">لا توجد أجهزة أخرى متصلة</div>';
+        return;
+      }
+      const currentDeviceId = getCurrentDeviceId();
+      container.innerHTML = data.devices.map(device => `
+        <div class="device-item ${currentDeviceId === device.deviceId ? 'current-device' : ''}">
+          <div class="device-info">
+            <span class="device-name">${escapeHtml(device.deviceName || 'جهاز غير معروف')} ${currentDeviceId === device.deviceId ? '(هذا الجهاز)' : ''}</span>
+            <span class="device-detail">آخر نشاط: ${new Date(device.lastActive).toLocaleString()}</span>
+            <span class="device-detail">IP: ${device.ip || 'غير متوفر'}</span>
+            <span class="device-detail">تاريخ الاتصال: ${new Date(device.createdAt).toLocaleString()}</span>
+          </div>
+          ${currentDeviceId !== device.deviceId ? `<button class="revoke-btn" data-id="${device.deviceId}">تسجيل خروج</button>` : ''}
+        </div>
+      `).join('');
+      // إضافة أحداث الأزرار
+      document.querySelectorAll('.revoke-btn').forEach(btn => {
+        btn.addEventListener('click', () => revokeDevice(btn.dataset.id));
+      });
+    } catch(e) {
+      document.getElementById('devicesList').innerHTML = '<div class="empty-message">⚠️ خطأ في تحميل الأجهزة</div>';
+    }
+  }
+
+  async function revokeDevice(deviceId) {
+    if (!confirm('هل أنت متأكد من تسجيل خروج هذا الجهاز؟')) return;
+    try {
+      const res = await fetch('/api/devices/revoke', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deviceId })
+      });
+      if (res.ok) {
+        alert('تم تسجيل خروج الجهاز بنجاح');
+        loadDevices();
+      } else {
+        alert('فشل تسجيل الخروج');
+      }
+    } catch(e) { alert('خطأ في الاتصال'); }
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  loadDevices();
+  // تحديث تلقائي كل 10 ثوانٍ
+  setInterval(loadDevices, 10000);
+</script>
+</body>
+</html>

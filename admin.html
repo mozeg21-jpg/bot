@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>لوحة الأدمن | 𝗗𝗢𝗖𝗧𝗢𝗥 𝗖𝗢𝗗𝗘 𝗘𝗟 𝗬𝗢𝗨𝗧𝗨𝗕𝗘𝗥</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ------------------- RESET & BASE ------------------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at 20% 30%, #0a0a1a, #010005);
+      color: #fff;
+      min-height: 100vh;
+      padding: 2rem;
+      position: relative;
+      overflow-x: auto;
+    }
+    /* الحواف الخارجية المتحركة (نفس الباقي) */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 3px;
+      background: conic-gradient(from 0deg, #00f3ff, #ff00cc, #ffcc00, #00ff88, #b100ff, #00f3ff);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 999;
+      animation: rotateBorder 8s linear infinite;
+    }
+    @keyframes rotateBorder {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border-radius: 28px;
+      pointer-events: none;
+      z-index: 998;
+      background: radial-gradient(circle at 50% 50%, transparent, rgba(0,0,0,0.2));
+    }
+    .admin-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    /* الهيدر */
+    .glass-header {
+      background: rgba(15, 15, 25, 0.75);
+      backdrop-filter: blur(16px);
+      border-radius: 48px;
+      padding: 1rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border: 1px solid rgba(0, 243, 255, 0.3);
+    }
+    .header-title {
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, #fff, #ffcc00);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .logout-admin {
+      background: transparent;
+      border: 2px solid #ff3366;
+      color: #ff3366;
+      padding: 0.5rem 1.5rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .logout-admin:hover {
+      background: #ff3366;
+      color: #000;
+      box-shadow: 0 0 20px #ff3366;
+    }
+    /* علامات التبويب */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 0.5rem;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #ccc;
+      cursor: pointer;
+      border-radius: 40px;
+      transition: 0.2s;
+    }
+    .tab-btn.active {
+      background: rgba(0, 243, 255, 0.2);
+      color: #00f3ff;
+      border: 1px solid #00f3ff;
+    }
+    .tab-pane {
+      display: none;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(8px);
+      border-radius: 32px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+    .tab-pane.active-pane {
+      display: block;
+    }
+    /* جدول المستخدمين */
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow-x: auto;
+      display: block;
+    }
+    .admin-table th, .admin-table td {
+      padding: 0.8rem;
+      text-align: right;
+      border-bottom: 1px solid #2a2a3a;
+    }
+    .admin-table th {
+      color: #00f3ff;
+    }
+    .user-actions button {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid;
+      border-radius: 30px;
+      padding: 0.2rem 0.8rem;
+      margin: 0.2rem;
+      cursor: pointer;
+      color: white;
+    }
+    .ban-btn { border-color: #ff3366; }
+    .unban-btn { border-color: #00ff88; }
+    .make-admin-btn { border-color: #ffcc00; }
+    .view-files-btn { border-color: #00f3ff; }
+    /* نماذج الإضافة */
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+      align-items: flex-end;
+    }
+    .form-group {
+      flex: 1;
+      min-width: 150px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #aaa;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.6rem;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #00f3ff;
+      border-radius: 28px;
+      color: white;
+    }
+    .submit-btn {
+      background: #00f3ff;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .log-viewer {
+      background: #0c0c12;
+      border-radius: 24px;
+      padding: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    @media (max-width: 800px) {
+      body { padding: 1rem; }
+      .admin-table th, .admin-table td { font-size: 0.75rem; padding: 0.4rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="admin-container">
+  <div class="glass-header">
+    <div class="header-title">👑 لوحة تحكم الأدمن</div>
+    <button id="adminLogout" class="logout-admin">🚪 تسجيل خروج</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="users">👥 المستخدمون</button>
+    <button class="tab-btn" data-tab="create">➕ إنشاء مستخدم</button>
+    <button class="tab-btn" data-tab="logs">📜 السجلات</button>
+    <button class="tab-btn" data-tab="files">📁 ملفات المستخدمين</button>
+  </div>
+
+  <!-- تبويب المستخدمين -->
+  <div id="usersTab" class="tab-pane active-pane">
+    <div style="overflow-x: auto;">
+      <table class="admin-table">
+        <thead>
+          <tr><th>المعرف</th><th>اسم المستخدم</th><th>الصلاحية</th><th>الخطة</th><th>الحالة</th><th>البوتات</th><th>الإجراءات</th></tr>
+        </thead>
+        <tbody id="usersTableBody">
+          <tr><td colspan="7">جاري التحميل...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- تبويب إنشاء مستخدم -->
+  <div id="createTab" class="tab-pane">
+    <h3 style="margin-bottom:1rem;">✨ إنشاء حساب جديد</h3>
+    <div class="form-row">
+      <div class="form-group"><label>اسم المستخدم</label><input type="text" id="newUsername" placeholder="username"></div>
+      <div class="form-group"><label>كلمة المرور</label><input type="password" id="newPassword" placeholder="password"></div>
+      <div class="form-group"><label>الخطة</label><select id="newPlan"><option value="free">مجاني</option><option value="premium">بريميوم</option></select></div>
+      <button id="createUserBtn" class="submit-btn">إنشاء</button>
+    </div>
+    <div id="createMsg" style="margin-top:1rem;"></div>
+  </div>
+
+  <!-- تبويب السجلات -->
+  <div id="logsTab" class="tab-pane">
+    <div class="log-viewer" id="logsContainer">جاري تحميل السجلات...</div>
+  </div>
+
+  <!-- تبويب ملفات المستخدمين -->
+  <div id="filesTab" class="tab-pane">
+    <div class="form-row">
+      <div class="form-group"><label>اختر المستخدم</label><select id="fileUserSelect"><option value="">-- اختر --</option></select></div>
+      <button id="loadFilesBtn" class="submit-btn">عرض الملفات</button>
+    </div>
+    <div id="filesList" style="margin-top:1rem; background:#0c0c12; border-radius:24px; padding:1rem; max-height:400px; overflow:auto;"></div>
+  </div>
+</div>
+
+<script>
+  // Helper: جلب الكوكيز
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  }
+
+  // التحقق من الصلاحية
+  async function checkAdmin() {
+    const res = await fetch('/api/me');
+    if (!res.ok) { window.location.href = '/login'; return false; }
+    const user = await res.json();
+    if (user.role !== 'admin' && user.role !== 'super_admin') { window.location.href = '/dashboard'; return false; }
+    return true;
+  }
+
+  // جلب قائمة المستخدمين
+  async function loadUsers() {
+    const res = await fetch('/api/admin/users');
+    if (!res.ok) return;
+    const data = await res.json();
+    const tbody = document.getElementById('usersTableBody');
+    if (!data.users.length) {
+      tbody.innerHTML = '<tr><td colspan="7">لا يوجد مستخدمون</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.users.map(u => `
+      <tr>
+        <td>${u.userId.slice(0,8)}...</td>
+        <td>${escapeHtml(u.username)}</td>
+        <td>${u.role}</td>
+        <td>${u.plan}</td>
+        <td>${u.status}</td>
+        <td>${u.botsCount}</td>
+        <td class="user-actions">
+          <button class="ban-btn" data-id="${u.userId}" data-action="ban">⛔ حظر</button>
+          <button class="unban-btn" data-id="${u.userId}" data-action="unban">🔓 فك الحظر</button>
+          <button class="make-admin-btn" data-id="${u.userId}" data-action="makeadmin">👑 ترقية لأدمن</button>
+          <button class="view-files-btn" data-id="${u.userId}" data-action="viewfiles">📂 ملفات</button>
+        </td>
+      </tr>
+    `).join('');
+    // إضافة أحداث الأزرار
+    document.querySelectorAll('.ban-btn').forEach(btn => btn.addEventListener('click', () => banUser(btn.dataset.id, 0)));
+    document.querySelectorAll('.unban-btn').forEach(btn => btn.addEventListener('click', () => unbanUser(btn.dataset.id)));
+    document.querySelectorAll('.make-admin-btn').forEach(btn => btn.addEventListener('click', () => setRole(btn.dataset.id, 'admin')));
+    document.querySelectorAll('.view-files-btn').forEach(btn => btn.addEventListener('click', () => switchToFilesTab(btn.dataset.id)));
+  }
+
+  async function banUser(userId, hours) {
+    const res = await fetch('/api/admin/ban', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ userId, durationHours: hours })
+    });
+    if (res.ok) { alert('تم حظر المستخدم'); loadUsers(); }
+    else alert('فشل الحظر');
+  }
+  async function unbanUser(userId) {
+    const res = await fetch('/api/admin/unban', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ userId })
+    });
+    if (res.ok) { alert('تم فك الحظر'); loadUsers(); }
+    else alert('فشل');
+  }
+  async function setRole(userId, role) {
+    const res = await fetch('/api/admin/set-role', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ userId, role })
+    });
+    if (res.ok) { alert('تم تغيير الصلاحية'); loadUsers(); }
+    else alert('فشل');
+  }
+
+  // إنشاء مستخدم
+  document.getElementById('createUserBtn').addEventListener('click', async () => {
+    const username = document.getElementById('newUsername').value.trim();
+    const password = document.getElementById('newPassword').value;
+    const plan = document.getElementById('newPlan').value;
+    if (!username || !password) { alert('املأ الحقول'); return; }
+    const res = await fetch('/api/admin/create-user', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ username, password, plan })
+    });
+    const msg = document.getElementById('createMsg');
+    if (res.ok) { msg.innerHTML = '<span style="color:#00ff88">✅ تم إنشاء المستخدم</span>'; loadUsers(); }
+    else { const err = await res.json(); msg.innerHTML = `<span style="color:#ff5566">❌ ${err.error}</span>`; }
+  });
+
+  // تحميل السجلات
+  async function loadLogs() {
+    const res = await fetch('/api/admin/logs');
+    if (!res.ok) return;
+    const data = await res.json();
+    const container = document.getElementById('logsContainer');
+    container.innerHTML = data.logs.map(l => `<div>${new Date(l.timestamp).toLocaleString()} | ${l.username} | ${l.action} ${l.details}</div>`).join('');
+  }
+
+  // تحميل قائمة المستخدمين في ملفات التبويب
+  async function populateFileUsers() {
+    const res = await fetch('/api/admin/users');
+    const data = await res.json();
+    const select = document.getElementById('fileUserSelect');
+    select.innerHTML = '<option value="">-- اختر مستخدم --</option>' + data.users.map(u => `<option value="${u.userId}">${escapeHtml(u.username)}</option>`).join('');
+  }
+  async function loadUserFiles(userId) {
+    if (!userId) return;
+    const res = await fetch(`/api/admin/user-files/${userId}`);
+    const data = await res.json();
+    const container = document.getElementById('filesList');
+    if (!data.files.length) { container.innerHTML = '<div>لا توجد ملفات مرفوعة بعد</div>'; return; }
+    container.innerHTML = `<pre>${JSON.stringify(data.files, null, 2)}</pre>`;
+  }
+  function switchToFilesTab(userId) {
+    document.querySelector('[data-tab="files"]').click();
+    setTimeout(() => {
+      document.getElementById('fileUserSelect').value = userId;
+      loadUserFiles(userId);
+    }, 100);
+  }
+  document.getElementById('loadFilesBtn').addEventListener('click', () => {
+    const userId = document.getElementById('fileUserSelect').value;
+    loadUserFiles(userId);
+  });
+
+  // تبديل التبويبات
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const tabId = btn.dataset.tab;
+      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active-pane'));
+      if (tabId === 'users') document.getElementById('usersTab').classList.add('active-pane');
+      else if (tabId === 'create') document.getElementById('createTab').classList.add('active-pane');
+      else if (tabId === 'logs') { document.getElementById('logsTab').classList.add('active-pane'); loadLogs(); }
+      else if (tabId === 'files') { document.getElementById('filesTab').classList.add('active-pane'); populateFileUsers(); }
+    });
+  });
+
+  document.getElementById('adminLogout').addEventListener('click', async () => {
+    await fetch('/api/logout', { method: 'POST' });
+    window.location.href = '/login';
+  });
+
+  function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+  (async () => {
+    if (await checkAdmin()) {
+      loadUsers();
+      loadLogs();
+      populateFileUsers();
+    }
+  })();
+</script>
+</body>
+</html>

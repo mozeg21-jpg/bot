@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>إنشاء حساب | 𝗗𝗢𝗖𝗧𝗢𝗥 𝗖𝗢𝗗𝗘 𝗘𝗟 𝗬𝗢𝗨𝗧𝗨𝗕𝗘𝗥</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at 30% 10%, #0a0a1a, #000000);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .register-card {
+      background: rgba(15, 15, 25, 0.8);
+      backdrop-filter: blur(16px);
+      border-radius: 48px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 480px;
+      border: 1px solid rgba(0, 243, 255, 0.4);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(0,243,255,0.2);
+      transition: 0.3s;
+      text-align: center;
+    }
+    .register-card:hover {
+      border-color: #ff00cc;
+      box-shadow: 0 0 35px rgba(255,0,204,0.3);
+    }
+    .mini-logo {
+      width: 85px;
+      height: 85px;
+      background: linear-gradient(45deg, #00f3ff, #ff00cc);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.2rem;
+      animation: pulse 2s infinite;
+    }
+    .mini-logo img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 #00f3ff80; }
+      70% { box-shadow: 0 0 0 12px #00f3ff00; }
+      100% { box-shadow: 0 0 0 0 #00f3ff00; }
+    }
+    h2 {
+      font-size: 1.9rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #fff, #00f3ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .input-group {
+      margin: 1.2rem 0;
+      text-align: right;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      color: #ccc;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #00f3ff;
+      border-radius: 28px;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .input-group input:focus {
+      border-color: #ff00cc;
+      box-shadow: 0 0 12px #ff00cc;
+    }
+    button {
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(90deg, #00f3ff, #b100ff);
+      border: none;
+      border-radius: 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #000;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 0.5rem;
+    }
+    button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px #00f3ff;
+    }
+    .error-msg, .success-msg {
+      padding: 0.5rem;
+      border-radius: 28px;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      display: none;
+    }
+    .error-msg { background: #ff556622; color: #ff5566; }
+    .success-msg { background: #00cc6644; color: #00ffaa; }
+    .login-link {
+      margin-top: 1.5rem;
+      color: #aaa;
+    }
+    .login-link a {
+      color: #00f3ff;
+      text-decoration: none;
+    }
+    .login-link a:hover {
+      text-shadow: 0 0 5px cyan;
+    }
+    @media (max-width: 500px) {
+      .register-card { padding: 1.8rem; }
+      h2 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="register-card">
+  <div class="mini-logo">
+    <img src="https://i.ibb.co/4ZCcTzcX/file-000000008c3871f5a8d2a2aaebdc2064.png" alt="logo">
+  </div>
+  <h2>إنشاء حساب جديد</h2>
+  <p style="color:#aaa; margin-bottom: 1.2rem;">انضم إلى منصة البوتات المتطورة</p>
+  <form id="registerForm">
+    <div class="input-group">
+      <label>👤 اسم المستخدم</label>
+      <input type="text" id="username" placeholder="أدخل اسم المستخدم" required>
+    </div>
+    <div class="input-group">
+      <label>🔒 كلمة المرور</label>
+      <input type="password" id="password" placeholder="••••••••" required>
+    </div>
+    <div class="input-group">
+      <label>🔒 تأكيد كلمة المرور</label>
+      <input type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور" required>
+    </div>
+    <button type="submit">✨ إنشاء حساب</button>
+    <div id="errorMsg" class="error-msg"></div>
+    <div id="successMsg" class="success-msg"></div>
+  </form>
+  <div class="login-link">
+    لديك حساب بالفعل؟ <a href="/login">تسجيل الدخول</a>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('registerForm');
+  const errorDiv = document.getElementById('errorMsg');
+  const successDiv = document.getElementById('successMsg');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorDiv.style.display = 'none';
+    successDiv.style.display = 'none';
+    
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+
+    if (!username || !password) {
+      errorDiv.innerText = 'يرجى ملء جميع الحقول';
+      errorDiv.style.display = 'block';
+      return;
+    }
+    if (password !== confirm) {
+      errorDiv.innerText = 'كلمتا المرور غير متطابقتين';
+      errorDiv.style.display = 'block';
+      return;
+    }
+    if (password.length < 4) {
+      errorDiv.innerText = 'كلمة المرور يجب أن تكون 4 أحرف على الأقل';
+      errorDiv.style.display = 'block';
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        successDiv.innerText = 'تم إنشاء الحساب بنجاح! جارٍ تحويلك لتسجيل الدخول...';
+        successDiv.style.display = 'block';
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 2000);
+      } else {
+        errorDiv.innerText = data.error || 'فشل إنشاء الحساب';
+        errorDiv.style.display = 'block';
+      }
+    } catch (err) {
+      errorDiv.innerText = 'خطأ في الاتصال بالخادم';
+      errorDiv.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>

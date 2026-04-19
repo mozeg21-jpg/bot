@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>الكونسول الحي | 𝗗𝗢𝗖𝗧𝗢𝗥 𝗖𝗢𝗗𝗘 𝗘𝗟 𝗬𝗢𝗨𝗧𝗨𝗕𝗘𝗥</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ------------------- RESET & BASE ------------------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Cairo', 'Fira Code', monospace;
+      background: radial-gradient(circle at 20% 30%, #0a0a1a, #010005);
+      color: #fff;
+      min-height: 100vh;
+      padding: 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+    /* ---------- الحواف الخارجية المتحركة (نفس تأثير bots.html) ---------- */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 0;
+      padding: 3px;
+      background: conic-gradient(from 0deg, #00f3ff, #ff00cc, #ffcc00, #00ff88, #b100ff, #00f3ff);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 999;
+      animation: rotateBorder 8s linear infinite;
+    }
+    @keyframes rotateBorder {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border-radius: 28px;
+      pointer-events: none;
+      z-index: 998;
+      background: radial-gradient(circle at 50% 50%, transparent, rgba(0,0,0,0.2));
+    }
+    /* الحاوية الرئيسية */
+    .console-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    /* الهيدر */
+    .glass-header {
+      background: rgba(15, 15, 25, 0.75);
+      backdrop-filter: blur(16px);
+      border-radius: 48px;
+      padding: 1rem 2rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border: 1px solid rgba(0, 243, 255, 0.3);
+    }
+    .bot-info h2 {
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, #fff, #00f3ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .bot-status {
+      font-size: 0.8rem;
+      margin-top: 0.2rem;
+    }
+    .back-btn {
+      background: transparent;
+      border: 2px solid #ffcc00;
+      color: #ffcc00;
+      padding: 0.5rem 1.5rem;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .back-btn:hover {
+      background: #ffcc00;
+      color: #000;
+      box-shadow: 0 0 20px #ffcc00;
+    }
+    /* صندوق الكونسول */
+    .console-terminal {
+      background: #0c0c12;
+      border-radius: 32px;
+      border: 1px solid #2a2a3a;
+      font-family: 'Fira Code', 'Courier New', monospace;
+      font-size: 14px;
+      height: 65vh;
+      overflow-y: auto;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .console-line {
+      padding: 0.2rem 0.5rem;
+      border-bottom: 1px solid #1a1a2a;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-family: monospace;
+      direction: ltr;
+      text-align: left;
+    }
+    .console-line.stdout { color: #00ffaa; }
+    .console-line.stderr { color: #ff5566; }
+    .console-line.system { color: #ffaa44; }
+    /* أزرار التحكم */
+    .control-bar {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .ctrl-btn {
+      background: rgba(0,0,0,0.6);
+      border: 2px solid;
+      border-radius: 60px;
+      padding: 0.6rem 1.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .ctrl-start { border-color: #00ff88; color: #00ff88; }
+    .ctrl-start:hover { background: #00ff88; color: #000; box-shadow: 0 0 15px #00ff88; }
+    .ctrl-stop { border-color: #ff3366; color: #ff3366; }
+    .ctrl-stop:hover { background: #ff3366; color: #fff; }
+    .ctrl-restart { border-color: #ffcc00; color: #ffcc00; }
+    .ctrl-restart:hover { background: #ffcc00; color: #000; }
+    .ctrl-clear { border-color: #aaa; color: #aaa; }
+    .ctrl-clear:hover { background: #aaa; color: #000; }
+    @media (max-width: 700px) {
+      body { padding: 0.8rem; }
+      .glass-header { flex-direction: column; text-align: center; }
+      .console-terminal { height: 55vh; }
+    }
+  </style>
+</head>
+<body>
+<div class="console-wrapper">
+  <div class="glass-header">
+    <div class="bot-info">
+      <h2 id="botName">الكونسول الحي</h2>
+      <div class="bot-status" id="botStatus">🟡 جاري التحميل...</div>
+    </div>
+    <a href="/bots" class="back-btn">← العودة للبوتات</a>
+  </div>
+
+  <div class="console-terminal" id="consoleOutput">
+    <div class="console-line system">[系统] جاري الاتصال بالبوت...</div>
+  </div>
+
+  <div class="control-bar">
+    <button id="startBtn" class="ctrl-btn ctrl-start">▶ بدء البوت</button>
+    <button id="stopBtn" class="ctrl-btn ctrl-stop">⏹ إيقاف البوت</button>
+    <button id="restartBtn" class="ctrl-btn ctrl-restart">🔄 إعادة تشغيل</button>
+    <button id="clearBtn" class="ctrl-btn ctrl-clear">🗑 مسح الشاشة</button>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  // الحصول على botId من رابط الصفحة
+  const urlParams = new URLSearchParams(window.location.search);
+  const botId = urlParams.get('botId');
+  if (!botId) {
+    alert('لم يتم تحديد البوت');
+    window.location.href = '/bots';
+  }
+
+  let socket = null;
+  let botData = null;
+
+  // عناصر DOM
+  const consoleDiv = document.getElementById('consoleOutput');
+  const botNameSpan = document.getElementById('botName');
+  const botStatusSpan = document.getElementById('botStatus');
+
+  // دالة إضافة سطر إلى الكونسول
+  function addConsoleLine(type, text) {
+    const line = document.createElement('div');
+    line.className = `console-line ${type}`;
+    // إضافة طابع زمني
+    const time = new Date().toLocaleTimeString();
+    line.textContent = `[${time}] ${text}`;
+    consoleDiv.appendChild(line);
+    // تمرير تلقائي للأسفل
+    consoleDiv.scrollTop = consoleDiv.scrollHeight;
+  }
+
+  // تحميل معلومات البوت
+  async function loadBotInfo() {
+    try {
+      const res = await fetch('/api/bots');
+      const data = await res.json();
+      const bot = data.bots.find(b => b.botId === botId);
+      if (bot) {
+        botData = bot;
+        botNameSpan.innerText = `🤖 ${bot.name}`;
+        botStatusSpan.innerHTML = bot.status === 'running' ? '🟢 يعمل الآن' : '🔴 متوقف';
+      } else {
+        botNameSpan.innerText = 'بوت غير موجود';
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  // تهيئة Socket.io
+  function initSocket() {
+    const token = getCookie('accessToken');
+    if (!token) {
+      addConsoleLine('system', '❌ غير مصرح به، يرجى تسجيل الدخول مرة أخرى');
+      setTimeout(() => window.location.href = '/login', 2000);
+      return;
+    }
+    socket = io(window.location.origin, { auth: { token } });
+    socket.on('connect', () => {
+      addConsoleLine('system', '✅ متصل بالخادم الحي');
+      socket.emit('join_bot', botId);
+    });
+    socket.on('console_output', (data) => {
+      let type = 'stdout';
+      if (data.type === 'stderr') type = 'stderr';
+      else if (data.type === 'system') type = 'system';
+      addConsoleLine(type, data.data);
+    });
+    socket.on('disconnect', () => {
+      addConsoleLine('system', '⚠️ انقطع الاتصال، جاري إعادة المحاولة...');
+    });
+  }
+
+  // دوال التحكم
+  async function startBot() {
+    try {
+      const res = await fetch('/api/bot/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ botId })
+      });
+      if (res.ok) {
+        addConsoleLine('system', '▶ تم إرسال أمر بدء التشغيل');
+        setTimeout(() => loadBotInfo(), 1000);
+      } else {
+        const err = await res.json();
+        addConsoleLine('stderr', `خطأ: ${err.error}`);
+      }
+    } catch(e) { addConsoleLine('stderr', 'فشل الاتصال'); }
+  }
+
+  async function stopBot() {
+    try {
+      const res = await fetch('/api/bot/stop', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ botId })
+      });
+      if (res.ok) {
+        addConsoleLine('system', '⏹ تم إرسال أمر الإيقاف');
+        setTimeout(() => loadBotInfo(), 1000);
+      } else {
+        const err = await res.json();
+        addConsoleLine('stderr', `خطأ: ${err.error}`);
+      }
+    } catch(e) { addConsoleLine('stderr', 'فشل الاتصال'); }
+  }
+
+  async function restartBot() {
+    addConsoleLine('system', '🔄 جاري إعادة التشغيل...');
+    try {
+      const res = await fetch('/api/bot/restart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ botId })
+      });
+      if (res.ok) {
+        addConsoleLine('system', '✅ تم إعادة التشغيل');
+        setTimeout(() => loadBotInfo(), 1500);
+      } else {
+        const err = await res.json();
+        addConsoleLine('stderr', `خطأ: ${err.error}`);
+      }
+    } catch(e) { addConsoleLine('stderr', 'فشل الاتصال'); }
+  }
+
+  function clearConsole() {
+    consoleDiv.innerHTML = '<div class="console-line system">[系统] تم مسح الشاشة</div>';
+  }
+
+  // الحصول على الكوكيز
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  }
+
+  // ربط الأزرار
+  document.getElementById('startBtn').addEventListener('click', startBot);
+  document.getElementById('stopBtn').addEventListener('click', stopBot);
+  document.getElementById('restartBtn').addEventListener('click', restartBot);
+  document.getElementById('clearBtn').addEventListener('click', clearConsole);
+
+  // تحميل البيانات وبدء الاتصال
+  loadBotInfo().then(() => {
+    initSocket();
+  });
+</script>
+</body>
+</html>

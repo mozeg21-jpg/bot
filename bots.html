@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>إدارة البوتات | 𝗗𝗢𝗖𝗧𝗢𝗥 𝗖𝗢𝗗𝗘 𝗘𝗟 𝗬𝗢𝗨𝗧𝗨𝗕𝗘𝗥</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ------------------- RESET & BASE ------------------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at 20% 30%, #0a0a1a, #010005);
+      color: #fff;
+      min-height: 100vh;
+      padding: 2rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+    /* ---------- الحواف الخارجية المتحركة بالكامل (الألوان تدور حول الشاشة) ---------- */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 0;
+      padding: 3px;
+      background: conic-gradient(from 0deg, #00f3ff, #ff00cc, #ffcc00, #00ff88, #b100ff, #00f3ff);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 999;
+      animation: rotateBorder 8s linear infinite;
+    }
+    @keyframes rotateBorder {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    /* طبقة إضافية لتوهج الحواف */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border-radius: 28px;
+      pointer-events: none;
+      z-index: 998;
+      background: radial-gradient(circle at 50% 50%, transparent, rgba(0,0,0,0.2));
+    }
+    /* الحاوية الرئيسية */
+    .bots-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    /* الهيدر */
+    .glass-header {
+      background: rgba(15, 15, 25, 0.75);
+      backdrop-filter: blur(16px);
+      border-radius: 48px;
+      padding: 1.2rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      box-shadow: 0 10px 25px -8px rgba(0,0,0,0.5);
+    }
+    .page-title {
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, #fff, #00f3ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .back-btn {
+      background: transparent;
+      border: 2px solid #ffcc00;
+      color: #ffcc00;
+      padding: 0.5rem 1.5rem;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .back-btn:hover {
+      background: #ffcc00;
+      color: #000;
+      box-shadow: 0 0 20px #ffcc00;
+    }
+    /* قائمة البوتات */
+    .bots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.8rem;
+    }
+    .bot-card {
+      background: rgba(10, 10, 20, 0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 36px;
+      padding: 1.5rem;
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .bot-card:hover {
+      transform: translateY(-6px);
+      border-color: #ff00cc;
+      box-shadow: 0 20px 35px -10px rgba(0,243,255,0.3);
+    }
+    .bot-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #00f3ff;
+      margin-bottom: 0.5rem;
+      word-break: break-word;
+    }
+    .bot-details {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .badge-type {
+      background: #00f3ff22;
+      border: 1px solid #00f3ff;
+      border-radius: 30px;
+      padding: 0.2rem 0.8rem;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .status-running { color: #00ffaa; }
+    .status-stopped { color: #ff8888; }
+    .bot-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+    .bot-btn {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid;
+      border-radius: 40px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .btn-start { border-color: #00ff88; color: #00ff88; }
+    .btn-start:hover { background: #00ff88; color: #000; box-shadow: 0 0 12px #00ff88; }
+    .btn-stop { border-color: #ff3366; color: #ff3366; }
+    .btn-stop:hover { background: #ff3366; color: #000; }
+    .btn-restart { border-color: #ffcc00; color: #ffcc00; }
+    .btn-restart:hover { background: #ffcc00; color: #000; }
+    .btn-delete { border-color: #ff3366; color: #ff3366; }
+    .btn-delete:hover { background: #ff3366; color: #fff; }
+    .btn-console { border-color: #00f3ff; color: #00f3ff; }
+    .btn-console:hover { background: #00f3ff; color: #000; }
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      background: rgba(0,0,0,0.4);
+      border-radius: 48px;
+      backdrop-filter: blur(8px);
+    }
+    @media (max-width: 700px) {
+      body { padding: 1rem; }
+      .bots-grid { grid-template-columns: 1fr; }
+      .glass-header { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="bots-container">
+  <div class="glass-header">
+    <div class="page-title">🤖 إدارة البوتات</div>
+    <a href="/dashboard" class="back-btn">← العودة للوحة</a>
+  </div>
+  <div id="botsList" class="bots-grid">
+    <div class="empty-state">⏳ جاري تحميل البوتات...</div>
+  </div>
+</div>
+
+<script>
+  async function fetchBots() {
+    try {
+      const res = await fetch('/api/bots');
+      if (!res.ok) throw new Error('فشل التحميل');
+      const data = await res.json();
+      return data.bots || [];
+    } catch(e) {
+      console.error(e);
+      return [];
+    }
+  }
+
+  async function performAction(botId, action) {
+    const endpoint = `/api/bot/${action}`;
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ botId })
+    });
+    if (res.ok) {
+      // تحديث الواجهة
+      loadBotsList();
+    } else {
+      const err = await res.json();
+      alert('خطأ: ' + (err.error || 'حدث خطأ'));
+    }
+  }
+
+  async function deleteBot(botId) {
+    if (!confirm('هل أنت متأكد من حذف هذا البوت؟ لا يمكن التراجع.')) return;
+    await performAction(botId, 'delete');
+  }
+
+  function loadBotsList() {
+    fetchBots().then(bots => {
+      const container = document.getElementById('botsList');
+      if (bots.length === 0) {
+        container.innerHTML = '<div class="empty-state">📭 لا توجد بوتات بعد. ارفع أول بوت من صفحة الرفع.</div>';
+        return;
+      }
+      container.innerHTML = bots.map(bot => `
+        <div class="bot-card" data-id="${bot.botId}">
+          <div class="bot-name">${escapeHtml(bot.name)}</div>
+          <div class="bot-details">
+            <span class="badge-type">${bot.type === 'node' ? '🟢 Node.js' : '🐍 Python'}</span>
+            <span class="status ${bot.status === 'running' ? 'status-running' : 'status-stopped'}">
+              ${bot.status === 'running' ? '▶ يعمل' : '⏹ متوقف'}
+            </span>
+            <span>📅 ${new Date(bot.createdAt).toLocaleDateString()}</span>
+          </div>
+          <div class="bot-actions">
+            <button class="bot-btn btn-start" onclick="performAction('${bot.botId}', 'start')">▶ بدء</button>
+            <button class="bot-btn btn-stop" onclick="performAction('${bot.botId}', 'stop')">⏹ إيقاف</button>
+            <button class="bot-btn btn-restart" onclick="performAction('${bot.botId}', 'restart')">🔄 إعادة تشغيل</button>
+            <button class="bot-btn btn-delete" onclick="deleteBot('${bot.botId}')">🗑 حذف</button>
+            <a href="/console?botId=${bot.botId}" class="bot-btn btn-console">🖥 كونسول</a>
+          </div>
+        </div>
+      `).join('');
+    }).catch(() => {
+      document.getElementById('botsList').innerHTML = '<div class="empty-state">⚠️ خطأ في تحميل البوتات</div>';
+    });
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  loadBotsList();
+  // تحديث تلقائي كل 10 ثوانٍ
+  setInterval(loadBotsList, 10000);
+</script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>رفع بوت | 𝗗𝗢𝗖𝗧𝗢𝗥 𝗖𝗢𝗗𝗘 𝗘𝗟 𝗬𝗢𝗨𝗧𝗨𝗕𝗘𝗥</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at 20% 30%, #0a0a1a, #010005);
+      color: #fff;
+      min-height: 100vh;
+      padding: 2rem;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 3px;
+      background: conic-gradient(from 0deg, #00f3ff, #ff00cc, #ffcc00, #00ff88, #b100ff, #00f3ff);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 999;
+      animation: rotateBorder 8s linear infinite;
+    }
+    @keyframes rotateBorder {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border-radius: 28px;
+      pointer-events: none;
+      z-index: 998;
+      background: radial-gradient(circle at 50% 50%, transparent, rgba(0,0,0,0.2));
+    }
+    .upload-container {
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .glass-card {
+      background: rgba(15, 15, 25, 0.75);
+      backdrop-filter: blur(16px);
+      border-radius: 48px;
+      padding: 2rem;
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      text-align: center;
+    }
+    .header-title {
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, #fff, #00ff88);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+    }
+    .drop-zone {
+      border: 2px dashed #00f3ff;
+      border-radius: 32px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .drop-zone.drag-over {
+      background: rgba(0, 243, 255, 0.1);
+      border-color: #ff00cc;
+    }
+    .file-input {
+      display: none;
+    }
+    .upload-btn {
+      background: linear-gradient(90deg, #00f3ff, #b100ff);
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 40px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .upload-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px #00f3ff;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: #ffcc00;
+      text-decoration: none;
+    }
+    .message {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      border-radius: 28px;
+      display: none;
+    }
+    .error { background: #ff336644; color: #ff88aa; }
+    .success { background: #00ff8844; color: #00ffaa; }
+  </style>
+</head>
+<body>
+<div class="upload-container">
+  <div class="glass-card">
+    <div class="header-title">📤 رفع بوت جديد</div>
+    <p>الملف يجب أن يكون بصيغة <strong>ZIP</strong> فقط</p>
+    <div class="drop-zone" id="dropZone">
+      <div>📁 اسحب وأفلت ملف ZIP هنا</div>
+      <div style="margin: 0.5rem;">أو</div>
+      <button type="button" id="browseBtn" style="background:#00f3ff22; border:1px solid #00f3ff; border-radius:30px; padding:0.3rem 1rem;">اختر ملف</button>
+      <input type="file" id="fileInput" accept=".zip" class="file-input">
+    </div>
+    <button id="uploadBtn" class="upload-btn" disabled>🚀 رفع البوت</button>
+    <div id="message" class="message"></div>
+    <a href="/dashboard" class="back-link">← العودة للوحة التحكم</a>
+  </div>
+</div>
+
+<script>
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const messageDiv = document.getElementById('message');
+  let selectedFile = null;
+
+  function showMessage(text, type) {
+    messageDiv.className = `message ${type}`;
+    messageDiv.innerText = text;
+    messageDiv.style.display = 'block';
+    setTimeout(() => { messageDiv.style.display = 'none'; }, 5000);
+  }
+
+  function enableUpload(file) {
+    selectedFile = file;
+    uploadBtn.disabled = false;
+    uploadBtn.style.opacity = '1';
+  }
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+  });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const files = e.dataTransfer.files;
+    if (files.length && files[0].name.endsWith('.zip')) {
+      enableUpload(files[0]);
+    } else {
+      showMessage('يرجى اختيار ملف ZIP فقط', 'error');
+    }
+  });
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length && e.target.files[0].name.endsWith('.zip')) {
+      enableUpload(e.target.files[0]);
+    } else {
+      showMessage('يرجى اختيار ملف ZIP', 'error');
+    }
+  });
+  document.getElementById('browseBtn').addEventListener('click', () => fileInput.click());
+
+  uploadBtn.addEventListener('click', async () => {
+    if (!selectedFile) return;
+    const formData = new FormData();
+    formData.append('botFile', selectedFile);
+    uploadBtn.disabled = true;
+    uploadBtn.innerText = 'جاري الرفع...';
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (res.ok) {
+        showMessage('✅ تم رفع البوت بنجاح! سيتم تحويلك...', 'success');
+        setTimeout(() => window.location.href = '/bots', 2000);
+      } else {
+        showMessage('❌ ' + (data.error || 'فشل الرفع'), 'error');
+        uploadBtn.disabled = false;
+        uploadBtn.innerText = '🚀 رفع البوت';
+      }
+    } catch(err) {
+      showMessage('❌ خطأ في الاتصال', 'error');
+      uploadBtn.disabled = false;
+      uploadBtn.innerText = '🚀 رفع البوت';
+    }
+  });
+</script>
+</body>
+</html>
